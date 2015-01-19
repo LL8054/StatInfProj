@@ -1,0 +1,53 @@
+---
+title: "STATISTICAL INFERENCE COURSE PROJECT: PART 2- ANALYZING TOOLGROWTH DATA"
+author: "Lawrence Lau"
+output: 
+  html_document:
+    keep_md: true
+---
+
+**<font color=blue> Overview </font>**<br>
+This report provides basic data exploratory and statistical analysis of the ToothGrowth dataset.  The [dataset's infosheet](http://www.inside-r.org/r-doc/datasets/ToothGrowth) states ToothGrowth measures the length (len) of teeth in each of 30 guinea pigs after three dose (dose) levels of Vitaminc C (.5, 1, and 2 mg) with each of two delivery methods (supp), Orange Juice (OJ) and Ascorbic Acid (VC).
+
+**<font color=blue> Loading and Exploring Data </font>**<br>
+Loading and viewing the structure of the ToolGrowth dataset.
+```{r}
+data(ToothGrowth)
+str(ToothGrowth)
+```
+We see there are 60 observations (rows) of 3 variables (columns), 2 numeric (len and dose) and 1 factor(supp).
+
+
+Viewing a summary of ToothGrowth.
+```{r}
+summary(ToothGrowth)
+``` 
+
+
+Viewing the first few lines of ToothGrowth.
+```{r}
+head(ToothGrowth)
+```
+The three variables are length of teeth (len), dose levels of Vitamin C (dose), and delivery method (supp).  
+
+[Inside-R.Org](http://www.inside-r.org/r-doc/datasets/ToothGrowth) provides a good plot that allows us to visualize the data.  We replicate it here.
+```{r}
+require(graphics)
+coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, 
+       xlab = "ToothGrowth data: length vs dose, given type of supplement")
+```
+<br>
+The length of the teeth increases the higher the doses of given Vitamin C.  For doses of .5 and 1.0 mg it seems as if OJ is the more affective delivery method.  
+
+**<font color=blue> Basic Summary of Data </font>**<br>
+```{r}
+library("lattice")
+a <- aggregate(ToothGrowth$len, list(ToothGrowth$dose,ToothGrowth$supp),FUN=function(x) c(mean = mean(x), sd = sd(x)))
+colnames(a)[c(1:3)] <- c("Dose", "Method", "Length")
+a
+```
+OJ's superior effectiveness in the .5 and 1.0 dosage amounts is obvious.
+
+
+
+
