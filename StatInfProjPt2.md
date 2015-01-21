@@ -28,13 +28,13 @@ summary(ToothGrowth)
 ```
 
 ```
-##       len       supp         dose     
-##  Min.   : 4.2   OJ:30   Min.   :0.50  
-##  1st Qu.:13.1   VC:30   1st Qu.:0.50  
-##  Median :19.2           Median :1.00  
-##  Mean   :18.8           Mean   :1.17  
-##  3rd Qu.:25.3           3rd Qu.:2.00  
-##  Max.   :33.9           Max.   :2.00
+##       len        supp         dose      
+##  Min.   : 4.20   OJ:30   Min.   :0.500  
+##  1st Qu.:13.07   VC:30   1st Qu.:0.500  
+##  Median :19.25           Median :1.000  
+##  Mean   :18.81           Mean   :1.167  
+##  3rd Qu.:25.27           3rd Qu.:2.000  
+##  Max.   :33.90           Max.   :2.000
 ```
 
 
@@ -55,15 +55,19 @@ head(ToothGrowth)
 ```
 The three variables are length of teeth (len), dose levels of Vitamin C (dose), and delivery method (supp).  
 
-[Inside-R.Org](http://www.inside-r.org/r-doc/datasets/ToothGrowth) provides a good plot that allows us to visualize the data.  We replicate it here.
+Let's visualize the data.
 
 ```r
-require(graphics)
-coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, 
-       xlab = "ToothGrowth data: length vs dose, given type of supplement")
+library(ggplot2)
+g <- ggplot(ToothGrowth, aes(x = dose, y = len, color = supp))
+g <- g + geom_point()
+g <- g + stat_summary(aes(group = 1), geom = "line", fun.y = mean, size = 1, col = "black")
+g <- g + facet_grid(. ~ supp)
+g <- g + ggtitle("ToothGrowth, length vs dose per supplement")
+g
 ```
 
-![plot of chunk unnamed-chunk-4](./StatInfProjPt2_files/figure-html/unnamed-chunk-4.png) 
+![](StatInfProjPt2_files/figure-html/unnamed-chunk-4-1.png) 
 <br>
 The length of the teeth increases the higher the doses of given Vitamin C.  For doses of .5 and 1.0 mg it seems as if OJ is the more affective delivery method.  
 
@@ -78,13 +82,14 @@ a
 
 ```
 ##   Dose Method Length.mean Length.sd
-## 1  0.5     OJ      13.230     4.460
-## 2  1.0     OJ      22.700     3.911
-## 3  2.0     OJ      26.060     2.655
-## 4  0.5     VC       7.980     2.747
-## 5  1.0     VC      16.770     2.515
-## 6  2.0     VC      26.140     4.798
+## 1  0.5     OJ   13.230000  4.459709
+## 2  1.0     OJ   22.700000  3.910953
+## 3  2.0     OJ   26.060000  2.655058
+## 4  0.5     VC    7.980000  2.746634
+## 5  1.0     VC   16.770000  2.515309
+## 6  2.0     VC   26.140000  4.797731
 ```
-OJ's superior effectiveness in the .5 and 1.0 dosage amounts is evident.
+OJ's superior effectiveness in the .5 and 1.0 dosage amounts is obvious.
+
 
 
