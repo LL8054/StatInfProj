@@ -2,28 +2,13 @@
 Lawrence Lau  
 
 **<font color=blue> Overview </font>**<br>
-This report provides basic data exploratory and statistical analysis of the ToothGrowth dataset.  The [dataset's infosheet](http://www.inside-r.org/r-doc/datasets/ToothGrowth) states ToothGrowth measures the length (len) of teeth in each of 30 guinea pigs after three dose (dose) levels of Vitaminc C (.5, 1, and 2 mg) with each of two delivery methods (supp), Orange Juice (OJ) and Ascorbic Acid (VC).
+This report provides basic data exploratory and statistical analysis of the [ToothGrowth dataset](http://www.inside-r.org/r-doc/datasets/ToothGrowth), which measures the length (len) of teeth in each of 30 guinea pigs after three dose (dose) levels of Vitaminc C (.5, 1, and 2 mg) with each of two delivery methods (supp), Orange Juice (OJ) and Ascorbic Acid (VC).
 
 **<font color=blue> 1.) Loading and Exploring Data </font>**<br>
-Loading and viewing the structure of the ToolGrowth dataset.
+Loading and viewing a summary of the ToolGrowth dataset, then viewing the first few lines.
 
 ```r
 data(ToothGrowth)
-str(ToothGrowth)
-```
-
-```
-## 'data.frame':	60 obs. of  3 variables:
-##  $ len : num  4.2 11.5 7.3 5.8 6.4 10 11.2 11.2 5.2 7 ...
-##  $ supp: Factor w/ 2 levels "OJ","VC": 2 2 2 2 2 2 2 2 2 2 ...
-##  $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...
-```
-We see there are 60 observations (rows) of 3 variables (columns), 2 numeric (len and dose) and 1 factor(supp).
-
-
-Viewing a summary of ToothGrowth.
-
-```r
 summary(ToothGrowth)
 ```
 
@@ -36,9 +21,6 @@ summary(ToothGrowth)
 ##  3rd Qu.:25.3           3rd Qu.:2.00  
 ##  Max.   :33.9           Max.   :2.00
 ```
-
-
-Viewing the first few lines of ToothGrowth.
 
 ```r
 head(ToothGrowth, n=2L)
@@ -55,15 +37,11 @@ Let's visualize the data. (Reference Appendix for Fig 1)
 
 ```r
 library(ggplot2)
-g <- ggplot(ToothGrowth, aes(x = dose, y = len, color = supp))
-g <- g + geom_point()
+g <- ggplot(ToothGrowth, aes(x = dose, y = len, color = supp)) + geom_point()
 g <- g + stat_summary(aes(group = 1), geom = "line", fun.y = mean, size = 1, col = "black")
-g <- g + facet_grid(. ~ supp)
-g <- g + ggtitle("Fig 1: ToothGrowth, length vs dose per supplement")
+g <- g + facet_grid(. ~ supp) + ggtitle("Fig 1: ToothGrowth, length v dose per supplement")
 g
 ```
-
-Fig 1 appears to show that length increases as more Vitamin C is given.  OJ doses of .5 and 1.0 seem to be the more effective delivery method.  
 
 **<font color=blue> 2.) Basic Summary of Data </font>**<br>
 
@@ -92,15 +70,23 @@ Ha: Tooth growth is effected by supp type.  (OJ mean != VC mean)
 
 ```r
 attach(ToothGrowth)
-t.test(len ~ supp)$conf
+t.test(len ~ supp)
 ```
 
 ```
-## [1] -0.171  7.571
-## attr(,"conf.level")
-## [1] 0.95
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  len by supp
+## t = 1.915, df = 55.31, p-value = 0.06063
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.171  7.571
+## sample estimates:
+## mean in group OJ mean in group VC 
+##            20.66            16.96
 ```
-The result's inconclusive, since the 95% confidence interval includes 0. However...
+The result's inconclusive, since the 95% confidence interval includes 0. The p-value is > .05 so we can't reject H0.  However...
 
 
 ```r
@@ -144,23 +130,12 @@ Here, a dosage of 2.0 absolutely results in a higher mean length than 1.0.
 
 **<font color=blue> 4.) Conclusions and Assumptions</font>**<br>
 
-* We have a 90% confidence interval that Orange Juice is a more effective mode of supplement for Vitamin C than Ascorbic Acid. Extrapolated to a 95% confidence interval though and the results are inconclusive. 
+* We have a 90% confidence interval that Orange Juice is a more effective mode of supplement for Vitamin C than Ascorbic Acid. Extrapolated to a 95% confidence interval though and the results are inconclusive. In any case, we cannot reject the null hypothesis based on a hypothesis test.
+
 * The higher the dose of Vitamin C, the longer the resulting length of tooth.  
+
 * These conclusions assume a constant but different variance in all groups.  It is also assumed the data are not paired, since no two teeth, even in the same mouth, grow to the same exact length.   
-<br>
+
 <p>
-
-**<font color=blue> Appendix: Fig 1</font>**<br>
-
-
-```r
-library(ggplot2)
-g <- ggplot(ToothGrowth, aes(x = dose, y = len, color = supp))
-g <- g + geom_point()
-g <- g + stat_summary(aes(group = 1), geom = "line", fun.y = mean, size = 1, col = "black")
-g <- g + facet_grid(. ~ supp)
-g <- g + ggtitle("Fig 1: ToothGrowth, length vs dose per supplement")
-g
-```
-
-![plot of chunk unnamed-chunk-10](./StatInfProjPt2_files/figure-html/unnamed-chunk-10.png) 
+**<font color=blue> Appendix - Fig 1</font>**<br>
+![plot of chunk unnamed-chunk-9](./StatInfProjPt2_files/figure-html/unnamed-chunk-9.png) 
